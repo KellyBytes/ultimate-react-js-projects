@@ -7,9 +7,11 @@
 - weather info
   - condition (image)
   - condition
+  - background color based on the condition
   - temperature
   - date
   - humidity
   - wind
 
-<!-- <img src="./calendar-app.png" width="50%"> -->
+<img src="./weather-app-sunny.png" width="50%">
+<img src="./weather-app-cloudy.png" width="50%">
