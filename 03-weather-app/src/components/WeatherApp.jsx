@@ -11,41 +11,39 @@ const WeatherApp = () => {
   const [loading, setLoading] = useState(false);
   const api_key = import.meta.env.VITE_WEATHER_API_KEY;
 
-  useEffect(() => {
-    const fetchDefaultWeather = async () => {
-      setLoading(true);
-      const defaultLocation = 'Edmonton';
-      const url = `https://api.openweathermap.org/data/2.5/weather?q=${defaultLocation}&units=Metric&APPID=${api_key}`;
-      const res = await fetch(url);
-      const defaultData = await res.json();
-      setData(defaultData);
-      setLocation(defaultLocation);
-      setLoading(false);
-    };
-
-    fetchDefaultWeather();
-  }, []);
-
-  const handleInputChange = (e) => {
-    setLocation(e.target.value);
-  };
-
-  const search = async () => {
-    if (location.trim() !== '') {
+  const fetchWeather = async (location) => {
+    try {
       setLoading(true);
       const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&units=Metric&APPID=${api_key}`;
       const res = await fetch(url);
-      const searchData = await res.json();
-      if (searchData.cod !== 200) {
+      const weatherData = await res.json();
+
+      if (weatherData.cod !== 200) {
         setData({ notFound: true });
-        // setLocation('');
       } else {
-        // console.log(searchData);
-        setData(searchData);
-        setLocation('');
+        setData(weatherData);
       }
+    } catch (error) {
+      console.error('Error fetching weather data:', error);
+      setData({ notFound: true });
+    } finally {
       setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    fetchWeather('Edmonton'); // Default location
+  }, []);
+
+  const search = () => {
+    if (location.trim() !== '') {
+      fetchWeather(location);
+      setLocation('');
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setLocation(e.target.value);
   };
 
   const handleKeyDown = (e) => {
